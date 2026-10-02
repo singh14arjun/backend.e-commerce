@@ -7,6 +7,7 @@ import ecommerce.backend.exception.EmailAlreadyExistsException;
 import ecommerce.backend.exception.PhoneNumberAlreadyExistsException;
 import ecommerce.backend.exception.UserException;
 import ecommerce.backend.exception.UserNotFoundException;
+import ecommerce.backend.mapper.Mapper;
 import ecommerce.backend.model.user.User;
 import ecommerce.backend.payload.dtoRequest.UserRegisterRequestDTO;
 import ecommerce.backend.payload.dtoResponse.APIResponse;
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserService {
         return new APIResponse<>(
                 true,
                 "User register successfully",
-                mapToResponseDTO(savedUser)
+                Mapper.mapToResponseDTO(savedUser)
         );
     }
 
@@ -93,19 +94,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public APIResponse<LoginResponseDTO> login(String email, String password) {
 
-        User user=userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User not found with email : "+email));
+        User user=userRepository.findByEmail(email).orElse(null);
 
-        if(!passwordEncoder.matches(password,user.getPassword())) {
+        if(user==null || !passwordEncoder.matches(password, user.getPassword())) {
             return new APIResponse<>(
                     false,
-                    "Invalid Password",
-                    null
+                    "Invalid email or password",null
             );
         }
 
         String token=jwtService.generateToken(user.getId(),user.getEmail(),user.getRole().name());
 
-        UserResponseDTO userResponseDTO = mapToResponseDTO(user);
+        UserResponseDTO userResponseDTO = Mapper.mapToResponseDTO(user);
 
         LoginResponseDTO loginResponseDTO =  LoginResponseDTO.builder().token(token).userResponseDTO(userResponseDTO).build();
 
@@ -115,6 +115,11 @@ public class UserServiceImpl implements UserService {
                 "Login successfully",
                 loginResponseDTO
         );
+    }
+
+    @Override
+    public APIResponse<UserResponseDTO> updateUser(String loggedInEmail) {
+        return null;
     }
 
     @Override
@@ -161,20 +166,20 @@ public class UserServiceImpl implements UserService {
                 null
         );
     }
-    private static UserResponseDTO mapToResponseDTO(User user) {
-        UserResponseDTO userResponseDTO = new UserResponseDTO();
-        userResponseDTO.setId(user.getId());
-        userResponseDTO.setUsername(user.getUsername());
-        userResponseDTO.setFirstName(user.getFirstName());
-        userResponseDTO.setLastName(user.getLastName());
-        userResponseDTO.setEmail(user.getEmail());
-        userResponseDTO.setProfilePicture(user.getProfilePicture());
-//        userResponseDTO.setPassword(user.getPassword());
-        userResponseDTO.setRole(user.getRole());
-        userResponseDTO.setPhoneNumber(user.getPhoneNumber());
-        userResponseDTO.setAccountStatus(user.getAccountStatus());
-        return userResponseDTO;
-    }
+//    private static UserResponseDTO mapToResponseDTO(User user) {
+//        UserResponseDTO userResponseDTO = new UserResponseDTO();
+//        userResponseDTO.setId(user.getId());
+//        userResponseDTO.setUsername(user.getUsername());
+//        userResponseDTO.setFirstName(user.getFirstName());
+//        userResponseDTO.setLastName(user.getLastName());
+//        userResponseDTO.setEmail(user.getEmail());
+//        userResponseDTO.setProfilePicture(user.getProfilePicture());
+////        userResponseDTO.setPassword(user.getPassword());
+//        userResponseDTO.setRole(user.getRole());
+//        userResponseDTO.setPhoneNumber(user.getPhoneNumber());
+//        userResponseDTO.setAccountStatus(user.getAccountStatus());
+//        return userResponseDTO;
+//    }
 
 
     private User getLoggedInUser(String loggedInEmail)  {

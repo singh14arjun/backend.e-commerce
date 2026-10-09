@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(
         name = "product_options",
@@ -32,4 +35,11 @@ public class ProductOption {
 
     @Column(nullable = false, length = 100)
     private String name;
+
+    @OneToMany(
+            mappedBy = "option",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<ProductOptionValue> values=new ArrayList<>();
 }

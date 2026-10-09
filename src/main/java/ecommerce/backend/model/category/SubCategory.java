@@ -1,5 +1,6 @@
 package ecommerce.backend.model.category;
 
+import ecommerce.backend.constant.SubCategoryStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,8 +36,9 @@ public class SubCategory {
 
     private String image;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Boolean status = true;
+    private SubCategoryStatus status= SubCategoryStatus.ACTIVE;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

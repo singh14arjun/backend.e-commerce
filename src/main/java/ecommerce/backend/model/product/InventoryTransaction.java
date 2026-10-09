@@ -3,6 +3,7 @@ package ecommerce.backend.model.product;
 import ecommerce.backend.constant.InventoryTransactionType;
 import ecommerce.backend.model.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ public class InventoryTransaction {
     @Column(name = "transaction_type", nullable = false, length = 30)
     private InventoryTransactionType transactionType;
 
+    @Min(1)
     @Column(nullable = false)
     private Integer quantity;
 

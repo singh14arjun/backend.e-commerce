@@ -30,6 +30,6 @@ public class ProductOptionValue {
     @JoinColumn(name = "option_id", nullable = false)
     private ProductOption option;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false,name = "value", length = 100)
     private String value;
 }

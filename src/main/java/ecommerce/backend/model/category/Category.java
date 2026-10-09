@@ -40,6 +40,10 @@ public class Category {
     @Column(nullable = false, length = 20)
     private CategoryStatus status = CategoryStatus.ACTIVE;
 
+    @Column(nullable = false)
+    private Integer subCategoryCount = 0;
+
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

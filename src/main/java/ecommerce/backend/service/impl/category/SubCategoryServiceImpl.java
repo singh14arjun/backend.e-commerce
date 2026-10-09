@@ -3,6 +3,7 @@ package ecommerce.backend.service.impl.category;
 import ecommerce.backend.cloudinary.CloudImageService;
 import ecommerce.backend.constant.CategoryStatus;
 import ecommerce.backend.constant.Role;
+import ecommerce.backend.constant.SubCategoryStatus;
 import ecommerce.backend.exception.UserNotFoundException;
 import ecommerce.backend.mapper.Mapper;
 import ecommerce.backend.model.category.Category;
@@ -57,7 +58,8 @@ public class SubCategoryServiceImpl implements SubCategoryService {
         subCategory.setName(subCategoryRequestDTO.getName());
         subCategory.setDescription(subCategoryRequestDTO.getDescription());
         subCategory.setCategory(category);
-        subCategory.setStatus(true);
+
+        subCategory.setStatus(SubCategoryStatus.ACTIVE);
 
         if(image !=null && !image.isEmpty()){
             String contentType=image.getContentType();
@@ -76,6 +78,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
             subCategory.setImage(secureUrl.toString());
         }
 
+        category.setSubCategoryCount(category.getSubCategoryCount()+1);
         SubCategory savedSubCategory=subCategoryRepository.save(subCategory);
 
 
@@ -94,7 +97,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
         SubCategory subCategory =
                 subCategoryRepository
-                        .findByIdAndStatusTrue(subCategoryId)
+                        .findByIdAndStatusTrue(subCategoryId , SubCategoryStatus.ACTIVE)
                         .orElseThrow(() ->
                                 new RuntimeException(
                                         "Subcategory not found with id: "
@@ -115,7 +118,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
         Category category=categoryRepository.findById(categoryId).orElseThrow(()->new RuntimeException("Category Not Found with id : "+categoryId));
 
-        List<SubCategory> subCategories=subCategoryRepository.findByCategoryIdAndStatusTrue(categoryId);
+        List<SubCategory> subCategories=subCategoryRepository.findByCategoryIdAndStatus(categoryId,SubCategoryStatus.ACTIVE);
 
         List<SubCategoryResponseDTO> subCategoryResponseDTOS=subCategories
                 .stream()

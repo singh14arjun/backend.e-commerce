@@ -1,6 +1,7 @@
 package ecommerce.backend.payload.dtoResponse.category;
 
 
+import ecommerce.backend.constant.CategoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,9 @@ public class CategoryResponseDTO {
 
     private String image;
 
-    private Boolean status;
+    private CategoryStatus status;
+
+    private Integer subCategoryCount;
 
     private LocalDateTime createdAt;
 

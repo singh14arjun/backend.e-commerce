@@ -1,6 +1,7 @@
 package ecommerce.backend.model.brand;
 
 import ecommerce.backend.constant.BrandStatus;
+import ecommerce.backend.model.category.SubCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +13,14 @@ import java.time.LocalDateTime;
 @Table(
         name = "brands",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_brand_name", columnNames = "name"),
-                @UniqueConstraint(name = "uk_brand_slug", columnNames = "slug")
+                @UniqueConstraint(
+                        name = "uk_subcategory_brand_name",
+                        columnNames = {"sub_category_id", "name"}
+                ),
+                @UniqueConstraint(
+                        name = "uk_brand_slug",
+                        columnNames = {"sub_category_id", "slug"}
+                )
         }
 )
 @Data
@@ -34,12 +41,18 @@ public class Brand {
     @Column(length = 500)
     private String description;
 
-    @Column(name = "logo_url")
     private String logoUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private BrandStatus status;
+    private BrandStatus status = BrandStatus.ACTIVE;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "sub_category_id",
+            nullable = false
+    )
+    private SubCategory subCategory;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -50,6 +63,7 @@ public class Brand {
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now();
+
         createdAt = now;
         updatedAt = now;
     }
@@ -58,6 +72,4 @@ public class Brand {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
-
 }

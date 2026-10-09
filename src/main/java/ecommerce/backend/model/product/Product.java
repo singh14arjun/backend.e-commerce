@@ -1,5 +1,6 @@
 package ecommerce.backend.model.product;
 
+import ecommerce.backend.constant.ProductStatus;
 import ecommerce.backend.model.category.Category;
 import ecommerce.backend.model.seller.Seller;
 import ecommerce.backend.model.user.User;
@@ -24,21 +25,16 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Seller who owns/listed the product
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;
 
-    // Product belongs to a sub-category
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_category_id", nullable = false)
     private SubCategory subCategory;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id",nullable = false)
-    private Category category;
+    private Boolean isWishlisted;
 
-    // Product belongs to a brand
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
@@ -55,17 +51,12 @@ public class Product {
     @Column(length = 500)
     private String shortDescription;
 
-    @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal basePrice;
-
-    @Column(precision = 12, scale = 2)
-    private BigDecimal discountPrice;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProductStatus status = ProductStatus.ACTIVE;
 
     @Column(nullable = false)
-    private Boolean status = true;
-
-    @Column(nullable = false)
-    private Boolean featured = false;
+    private boolean featured = false;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

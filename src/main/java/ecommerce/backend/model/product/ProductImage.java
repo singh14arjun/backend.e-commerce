@@ -29,14 +29,13 @@ public class ProductImage {
     @Column(name = "image_url", nullable = false, length = 1000)
     private String imageUrl;
 
-    @Column(name = "alternative_image_url", length = 1000)
-    private String alternativeImageUrl;
+
 
     @Column(name = "alt_text", length = 255)
     private String altText;
 
     @Column(name = "display_order")
-    private Integer displayOrder;
+    private Integer displayOrder =0;
 
     @Column(name = "is_primary", nullable = false)
     private Boolean isPrimary = false;

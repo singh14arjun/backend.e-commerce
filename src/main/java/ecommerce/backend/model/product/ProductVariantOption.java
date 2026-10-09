@@ -32,9 +32,7 @@ public class ProductVariantOption {
     @JoinColumn(name = "variant_id", nullable = false)
     private ProductVariant variant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "option_id", nullable = false)
-    private ProductOption option;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_value_id", nullable = false)

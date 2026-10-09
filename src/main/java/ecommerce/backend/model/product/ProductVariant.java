@@ -1,5 +1,6 @@
 package ecommerce.backend.model.product;
 
+import ecommerce.backend.constant.ProductVariantStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,17 +37,42 @@ public class ProductVariant {
     @Column(nullable = false, unique = true, length = 100)
     private String sku;
 
-    @Column(precision = 12, scale = 2)
+    // Original price
+    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "discount_price", precision = 12, scale = 2)
-    private BigDecimal discountPrice;
+    // Discount percentage
+    @Column(
+            name = "discount_percentage",
+            precision = 5,
+            scale = 2
+    )
+    private BigDecimal discountPercentage;
 
+    // Calculated discount amount
+    @Column(
+            name = "discount_amount",
+            precision = 12,
+            scale = 2
+    )
+    private BigDecimal discountAmount;
+
+    // Final selling price
+    @Column(
+            name = "payable_amount",
+            nullable = false,
+            precision = 12,
+            scale = 2
+    )
+    private BigDecimal payableAmount;
+
+    // Product weight
     @Column(precision = 10, scale = 3)
     private BigDecimal weight;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Boolean status = true;
+    private ProductVariantStatus status = ProductVariantStatus.ACTIVE;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

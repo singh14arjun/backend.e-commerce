@@ -1,5 +1,6 @@
 package ecommerce.backend.payload.dtoResponse.category;
 
+import ecommerce.backend.constant.SubCategoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class SubCategoryResponseDTO {
 
     private String image;
 
-    private Boolean status;
+    private SubCategoryStatus status;
 
     private Long categoryId;
 

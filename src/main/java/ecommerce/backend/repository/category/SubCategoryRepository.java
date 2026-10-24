@@ -17,8 +17,9 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory, Long> 
             Long categoryId,
             SubCategoryStatus subCategoryStatus
     );
+    List<SubCategory> findByCategoryId(Long categoryId);
 
-    List<SubCategory> findByStatusTrue(
+    List<SubCategory> findAllByStatus(
             SubCategoryStatus subCategoryStatus
     );
 

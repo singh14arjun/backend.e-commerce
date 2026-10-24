@@ -2,6 +2,7 @@ package ecommerce.backend.payload.dtoResponse;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import ecommerce.backend.constant.Role;
+import ecommerce.backend.constant.UserStatus;
 import ecommerce.backend.model.Address;
 //import ecommerce.backend.model.PaymentInformation;
 //import ecommerce.backend.model.Ratings;
@@ -42,7 +43,7 @@ public class UserResponseDTO {
 
     private Role role;
 
-    private Boolean accountStatus ;
+    private UserStatus status ;
 
     private List<Address> addresses =new ArrayList<>();
 

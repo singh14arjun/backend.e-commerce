@@ -3,16 +3,20 @@ package ecommerce.backend.service.impl.category;
 import ecommerce.backend.cloudinary.CloudImageService;
 import ecommerce.backend.constant.CategoryStatus;
 import ecommerce.backend.constant.Role;
+import ecommerce.backend.constant.SubCategoryStatus;
 import ecommerce.backend.exception.UserNotFoundException;
 import ecommerce.backend.mapper.Mapper;
 import ecommerce.backend.model.category.Category;
+import ecommerce.backend.model.category.SubCategory;
 import ecommerce.backend.model.user.User;
 import ecommerce.backend.payload.dtoRequest.category.CategoryRequestDTO;
+import ecommerce.backend.payload.dtoRequest.category.CategoryStatusUpdatedRequestDTO;
 import ecommerce.backend.payload.dtoRequest.category.CategoryUpdateRequest;
 import ecommerce.backend.payload.dtoResponse.APIResponse;
 import ecommerce.backend.payload.dtoResponse.category.CategoryResponseDTO;
 import ecommerce.backend.repository.UserRepository;
 import ecommerce.backend.repository.category.CategoryRepository;
+import ecommerce.backend.repository.category.SubCategoryRepository;
 import ecommerce.backend.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,19 +27,17 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
     private final UserRepository userRepository;
     private final CloudImageService cloudImageService;
 
-
-    // =========================================================
-    // ADD CATEGORY
-    // =========================================================
 
     @Override
     @Transactional
@@ -94,10 +96,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
-    // =========================================================
-    // GET CATEGORY BY ID
-    // =========================================================
-
     @Override
     public APIResponse<CategoryResponseDTO> getCategoryByCategoryId(
             Long categoryId) {
@@ -117,9 +115,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
-    // =========================================================
-    // GET ALL CATEGORIES
-    // =========================================================
 
     @Override
     public APIResponse<List<CategoryResponseDTO>> getAllCategoryList() {
@@ -146,10 +141,30 @@ public class CategoryServiceImpl implements CategoryService {
         );
     }
 
+    @Override
+    public APIResponse<List<CategoryResponseDTO>> getAllActiveCategoryList() {
 
-    // =========================================================
-    // UPDATE CATEGORY
-    // =========================================================
+        List<CategoryResponseDTO> responseDTOList=categoryRepository.findAllByStatus(CategoryStatus.ACTIVE)
+                .stream()
+                .map(Mapper::createCategoryResponseDTO)
+                .toList();
+
+        if(responseDTOList.isEmpty())
+        {
+            return new APIResponse<>(
+                    false,
+                    "No active categories found",
+                    null
+            );
+        }
+
+        return new APIResponse<>(
+                true,
+                "All active Categories fetched successfully",
+                responseDTOList
+        );
+    }
+
 
     @Override
     @Transactional
@@ -169,7 +184,6 @@ public class CategoryServiceImpl implements CategoryService {
                         )
                 );
 
-        // Check duplicate name
         if (categoryRequestDTOHasName(
                 categoryUpdateRequest)) {
 
@@ -210,9 +224,60 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
-    // =========================================================
-    // UPDATE CATEGORY IMAGE
-    // =========================================================
+    @Override
+    @Transactional
+    public APIResponse<CategoryResponseDTO> changeCategoryStatusById(
+            Long categoryId,
+            CategoryStatusUpdatedRequestDTO status,
+            String loggedInEmail
+    ) {
+        User user = getLoggedInUser(loggedInEmail);
+        checkAdmin(user);
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElse(null);
+
+        if (category == null) {
+            return new APIResponse<>(
+                    false,
+                    "No category found",
+                    null
+            );
+        }
+
+        if (status == null) {
+            return new APIResponse<>(
+                    false,
+                    "Category status is required",
+                    null
+            );
+        }
+
+        List<SubCategory> subCategories = subCategoryRepository.findByCategoryId(categoryId);
+
+        for(SubCategory subCategory:subCategories){
+            subCategory.setStatus(
+                    status.getStatus() == CategoryStatus.ACTIVE
+                            ? SubCategoryStatus.ACTIVE
+                            : status.getStatus() == CategoryStatus.INACTIVE
+                            ? SubCategoryStatus.INACTIVE
+                            : SubCategoryStatus.ARCHIVED
+            );
+        }
+        subCategoryRepository.saveAll(subCategories);
+
+
+        category.setStatus(status.getStatus());
+
+        Category savedCategory = categoryRepository.save(category);
+
+        return new APIResponse<>(
+                true,
+                "Category status updated successfully",
+                Mapper.createCategoryResponseDTO(savedCategory)
+        );
+    }
+
 
     @Override
     @Transactional

@@ -20,7 +20,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             Pageable pageable
     );
 
-    Page<Product> findBySellerId(Long sellerId, Pageable pageable);
+    List<Product> findBySellerId(Long sellerId);
 
     Page<Product> findBySellerIdAndStatus(
             Long sellerId,

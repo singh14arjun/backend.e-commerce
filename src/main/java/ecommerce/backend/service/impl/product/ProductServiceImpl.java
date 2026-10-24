@@ -382,6 +382,61 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    @Override
+    public APIResponse<List<ProductResponseDTO>> getAllProductsBySellerId(String loggedInEmail) {
+
+
+        Optional<User> userOptional= userRepository.findByEmail(loggedInEmail);
+        if(userOptional.isEmpty()){
+            return new APIResponse<>(
+                    false,
+                    "No user found",
+                    null
+            );
+        }
+
+        User user=userOptional.get();
+
+        if(user.getRole()!= Role.SELLER){
+            return new APIResponse<>(
+                    false,
+                    "You are not seller",
+                    null
+            );
+        }
+
+        Optional<Seller> seller=sellerRepository.findByUser(user);
+
+        if(seller.isEmpty()){
+            return new APIResponse<>(
+                    false,
+                    "No Seller found by with this email "+user.getEmail(),
+                    null
+            );
+        }
+
+        List<ProductResponseDTO> productResponseDTOList=productRepository.findBySellerId(seller.get().getId())
+                .stream()
+                .map(this::mapProductTpResponse)
+                .toList();
+
+        String sellerName=seller.get().getStoreName();
+
+        if(productResponseDTOList.isEmpty()){
+            return new APIResponse<>(
+                    false,
+                    "No products for this seller account "+sellerName,
+                    null
+            );
+        }
+
+
+        return new APIResponse<>(
+                true,
+                "All products for the seller "+sellerName,
+                productResponseDTOList
+        );
+    }
 
 
     @Override

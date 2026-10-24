@@ -2,6 +2,7 @@ package ecommerce.backend.service.impl;
 
 import ecommerce.backend.constant.Role;
 import ecommerce.backend.constant.SellerApplicationStatus;
+import ecommerce.backend.constant.SellerStatus;
 import ecommerce.backend.model.seller.Seller;
 import ecommerce.backend.model.seller.SellerApplication;
 import ecommerce.backend.model.user.User;
@@ -51,7 +52,7 @@ public class SellerApplicationAdminServiceImpl implements SellerApplicationAdmin
         seller.setStorePhoneNumber(sellerApplication.getStorePhoneNumber());
         seller.setGstNumber(sellerApplication.getGstNumber());
         seller.setPanNumber(sellerApplication.getPanNumber());
-        seller.setIsActive(true);
+        seller.setStatus(SellerStatus.ACTIVE);
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -96,7 +97,7 @@ public class SellerApplicationAdminServiceImpl implements SellerApplicationAdmin
 
         return new APIResponse<>(
                 true,
-                "Seller application reject successfylly"
+                "Seller application reject successfully"
                 ,createSellerApplicationResponseDTO(rejectedSellerApplication)
         );
     }

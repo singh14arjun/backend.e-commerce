@@ -1,6 +1,8 @@
 package ecommerce.backend.service.category;
 
+import ecommerce.backend.constant.CategoryStatus;
 import ecommerce.backend.payload.dtoRequest.category.CategoryRequestDTO;
+import ecommerce.backend.payload.dtoRequest.category.CategoryStatusUpdatedRequestDTO;
 import ecommerce.backend.payload.dtoRequest.category.CategoryUpdateRequest;
 import ecommerce.backend.payload.dtoResponse.APIResponse;
 import ecommerce.backend.payload.dtoResponse.category.CategoryResponseDTO;
@@ -25,6 +27,7 @@ public interface CategoryService {
     APIResponse<List<CategoryResponseDTO>> getAllCategoryList(
 
     );
+    APIResponse<List<CategoryResponseDTO>> getAllActiveCategoryList();
 
 
     APIResponse<CategoryResponseDTO> updateCategoryById(
@@ -33,6 +36,10 @@ public interface CategoryService {
             String loggedInEmail
     );
 
+    APIResponse<CategoryResponseDTO> changeCategoryStatusById(
+            Long categoryId,
+            CategoryStatusUpdatedRequestDTO categoryStatus,
+            String loggedInEmail);
 
     APIResponse<CategoryResponseDTO> updateCategoryImage(
             Long categoryId,

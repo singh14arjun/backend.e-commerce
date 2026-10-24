@@ -42,4 +42,6 @@ public class SellerApplicationController {
 
         return ResponseEntity.ok(response);
     }
+
+
 }

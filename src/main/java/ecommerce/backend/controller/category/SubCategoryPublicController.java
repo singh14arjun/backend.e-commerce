@@ -30,6 +30,15 @@ public class SubCategoryPublicController {
         );
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<APIResponse<List<SubCategoryResponseDTO>>>  getAllActiveSubCategories() throws  Exception{
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                subCategoryService.getAllActiveSubCategories()
+
+        );
+    }
+
     @GetMapping("/{subCategoryId}")
     public ResponseEntity<APIResponse<SubCategoryResponseDTO>> getSubCategoryById(
             @PathVariable Long subCategoryId

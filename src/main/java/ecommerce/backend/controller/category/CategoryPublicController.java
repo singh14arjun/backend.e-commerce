@@ -31,10 +31,20 @@ public class CategoryPublicController {
         );
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<APIResponse<List<CategoryResponseDTO>>> getAllActiveCategories() {
+
+        return ResponseEntity.ok(
+                categoryService.getAllActiveCategoryList()
+        );
+    }
+
+
     @GetMapping("/{categoryId}")
     public ResponseEntity<APIResponse<CategoryResponseDTO>> getCategoryById(
             @PathVariable Long categoryId
     ) {
+
 
         return ResponseEntity.ok(
                 categoryService.getCategoryByCategoryId(categoryId)

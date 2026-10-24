@@ -78,11 +78,20 @@ public class AppConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**")
                         .permitAll()
 
+
+
                         // Public authentication APIs
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/auth/register",
                                 "/api/auth/login"
+                        ).permitAll()
+
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml"
                         ).permitAll()
 
                         // Admin APIs

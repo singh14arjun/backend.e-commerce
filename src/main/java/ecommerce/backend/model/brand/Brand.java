@@ -1,7 +1,9 @@
 package ecommerce.backend.model.brand;
 
 import ecommerce.backend.constant.BrandStatus;
+import ecommerce.backend.constant.Role;
 import ecommerce.backend.model.category.SubCategory;
+import ecommerce.backend.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,12 +49,20 @@ public class Brand {
     @Column(nullable = false)
     private BrandStatus status = BrandStatus.ACTIVE;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(
+//            name = "sub_category_id",
+//            nullable = false
+//    )
+//    private SubCategory subCategory;
+
+    @ManyToOne(fetch = FetchType.LAZY ,optional = false)
     @JoinColumn(
-            name = "sub_category_id",
-            nullable = false
+            name = "created_by",
+            nullable = false,
+            updatable = false
     )
-    private SubCategory subCategory;
+    private User createdBy;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

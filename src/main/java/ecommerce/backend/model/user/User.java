@@ -2,6 +2,7 @@ package ecommerce.backend.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import ecommerce.backend.constant.Role;
+import ecommerce.backend.constant.UserStatus;
 import ecommerce.backend.model.Address;
 //import ecommerce.backend.model.PaymentInformation;
 //import ecommerce.backend.model.Ratings;
@@ -31,8 +32,6 @@ public class User {
 
     private String profilePicture;
 
-
-
     private String password;
 
     private String firstName;
@@ -51,6 +50,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Address> addresses =new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Status is required")
+    private UserStatus status;
+
 //    @Embedded
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    @CollectionTable(name = "payment_information" ,joinColumns = @JoinColumn(name = "user_id"))
@@ -64,7 +67,7 @@ public class User {
 //    @JsonIgnore
 //    private List<Reviews> reviews=new ArrayList<>();
 
-    private Boolean accountStatus ;
+
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -3,6 +3,7 @@ package ecommerce.backend.service.impl;
 import com.cloudinary.Cloudinary;
 import ecommerce.backend.cloudinary.CloudImageService;
 import ecommerce.backend.constant.Role;
+import ecommerce.backend.constant.UserStatus;
 import ecommerce.backend.exception.EmailAlreadyExistsException;
 import ecommerce.backend.exception.PhoneNumberAlreadyExistsException;
 import ecommerce.backend.exception.UserException;
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
         newUser.setPhoneNumber(user.getPhoneNumber());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         newUser.setRole(Role.CUSTOMER);
-        newUser.setAccountStatus(true);
+        newUser.setStatus(UserStatus.ACTIVE);
 
         if (multipartFile != null && !multipartFile.isEmpty()) {
 
@@ -100,6 +101,12 @@ public class UserServiceImpl implements UserService {
             return new APIResponse<>(
                     false,
                     "Invalid email or password",null
+            );
+        }
+        if(user.getStatus() != UserStatus.ACTIVE) {
+            return new APIResponse<>(
+                    false,
+                    "Your account is suspended wait for some times",null
             );
         }
 

@@ -1,6 +1,7 @@
 package ecommerce.backend.payload.dtoResponse.seller;
 
 
+import ecommerce.backend.constant.SellerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,8 @@ public class SellerResponseDTO {
 
     private Long id;
     private Long userId;
+    private String sellerName;
+    private String profileImage;
 
     private String storeName;
     private String storeEmail;
@@ -22,7 +25,7 @@ public class SellerResponseDTO {
     private String gstNumber;
     private String panNumber;
 
-    private Boolean isActive;
+    private SellerStatus status;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

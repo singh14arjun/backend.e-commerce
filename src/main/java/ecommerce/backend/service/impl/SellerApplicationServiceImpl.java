@@ -71,6 +71,7 @@ public class SellerApplicationServiceImpl implements SellerApplicationService {
        );
 }
 
+
     @Override
     public APIResponse<SellerProfileResponseDTO> getMySellerProfile(String email) {
 

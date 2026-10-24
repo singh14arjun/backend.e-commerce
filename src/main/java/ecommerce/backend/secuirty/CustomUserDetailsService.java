@@ -1,5 +1,6 @@
 package ecommerce.backend.secuirty;
 
+import ecommerce.backend.constant.UserStatus;
 import ecommerce.backend.model.user.User;
 import ecommerce.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 new org.springframework.security.core.userdetails.User(
                         user.getEmail(),
                         user.getPassword(),
-                        user.getAccountStatus(),
+                        user.getStatus() == UserStatus.ACTIVE,
                         true,
                         true,
                         true,

@@ -1,5 +1,6 @@
 package ecommerce.backend.payload.dtoRequest;
 
+import ecommerce.backend.constant.UserStatus;
 import lombok.Data;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -46,7 +47,7 @@ public class UserRegisterRequestDTO {
     )
     private String phoneNumber;
 
-    private Boolean accountStatus ;
+    private UserStatus status ;
 
 }
 

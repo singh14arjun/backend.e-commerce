@@ -1,6 +1,7 @@
 package ecommerce.backend.mapper;
 
-import ecommerce.backend.constant.CategoryStatus;
+
+import ecommerce.backend.constant.Role;
 import ecommerce.backend.model.brand.Brand;
 import ecommerce.backend.model.category.Category;
 import ecommerce.backend.model.category.SubCategory;
@@ -22,10 +23,14 @@ import ecommerce.backend.payload.dtoResponse.seller.SellerAddressResponseDTO;
 import ecommerce.backend.payload.dtoResponse.seller.SellerApplicationResponseDTO;
 import ecommerce.backend.payload.dtoResponse.seller.SellerResponseDTO;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Mapper {
+
+
+
     public static UserResponseDTO mapToResponseDTO(User user) {
         UserResponseDTO userResponseDTO = new UserResponseDTO();
         userResponseDTO.setId(user.getId());
@@ -37,7 +42,7 @@ public class Mapper {
 //        userResponseDTO.setPassword(user.getPassword());
         userResponseDTO.setRole(user.getRole());
         userResponseDTO.setPhoneNumber(user.getPhoneNumber());
-        userResponseDTO.setAccountStatus(user.getAccountStatus());
+        userResponseDTO.setStatus(user.getStatus());
         return userResponseDTO;
     }
 
@@ -47,6 +52,8 @@ public class Mapper {
 
         sellerApplicationResponseDTO.setId(sellerApplication.getId());
         sellerApplicationResponseDTO.setUserId(sellerApplication.getUser().getId());
+        sellerApplicationResponseDTO.setSellerName(sellerApplication.getUser().getFirstName() + " " + sellerApplication.getUser().getLastName());
+        sellerApplicationResponseDTO.setProfileImage(sellerApplication.getUser().getProfilePicture());
         sellerApplicationResponseDTO.setStoreName(sellerApplication.getStoreName());
         sellerApplicationResponseDTO.setStoreEmail(sellerApplication.getStoreEmail());
 
@@ -94,10 +101,12 @@ public class Mapper {
         dto.setUserId(seller.getUser().getId());
         dto.setStoreName(seller.getStoreName());
         dto.setStoreEmail(seller.getStoreEmail());
+        dto.setSellerName(seller.getUser().getFirstName()+" "+seller.getUser().getLastName());
+        dto.setProfileImage(seller.getUser().getProfilePicture());
         dto.setStorePhoneNumber(seller.getStorePhoneNumber());
         dto.setGstNumber(seller.getGstNumber());
         dto.setPanNumber(seller.getPanNumber());
-        dto.setIsActive(seller.getIsActive());
+        dto.setStatus(seller.getStatus());
         dto.setCreatedAt(seller.getCreatedAt());
         dto.setUpdatedAt(seller.getUpdatedAt());
 
@@ -135,17 +144,26 @@ public class Mapper {
         return  response;
     }
 
-    public static BrandResponseDTO createBrandResponseDTO(Brand brand) {
+    public static BrandResponseDTO createBrandResponseDTO(Brand brand,String createdByName
+    ) {
         BrandResponseDTO response =
                 new BrandResponseDTO();
+
+        User user=brand.getCreatedBy();
+
         response.setId(brand.getId());
         response.setName(brand.getName());
         response.setSlug(brand.getSlug());
         response.setDescription(brand.getDescription());
-        response.setSubCategoryId(brand.getSubCategory().getId());
-        response.setSubCategoryName(brand.getSubCategory().getName());
+//        response.setSubCategoryId(brand.getSubCategory().getId());
+//        response.setSubCategoryName(brand.getSubCategory().getName());
         response.setStatus(brand.getStatus());
         response.setLogoUrl(brand.getLogoUrl());
+        response.setCreatedById(brand.getCreatedBy().getId());
+        response.setCreatedByRole(brand.getCreatedBy().getRole());
+
+        response.setCreatedByName(createdByName);
+
         response.setCreatedAt(brand.getCreatedAt());
         response.setUpdatedAt(brand.getUpdatedAt());
 

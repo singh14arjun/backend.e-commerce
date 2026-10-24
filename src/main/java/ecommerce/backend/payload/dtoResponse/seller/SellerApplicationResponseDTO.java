@@ -17,6 +17,9 @@ public class SellerApplicationResponseDTO {
 
     private Long userId;
 
+    private String sellerName;
+    private String profileImage;
+
     private String storeName;
 
     private String storeEmail;

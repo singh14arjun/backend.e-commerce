@@ -1,6 +1,8 @@
 package ecommerce.backend.controller.category;
 
 import ecommerce.backend.payload.dtoRequest.category.CategoryRequestDTO;
+import ecommerce.backend.payload.dtoRequest.category.CategoryStatusUpdatedRequestDTO;
+import ecommerce.backend.payload.dtoRequest.category.CategoryUpdateRequest;
 import ecommerce.backend.payload.dtoResponse.APIResponse;
 import ecommerce.backend.payload.dtoResponse.category.CategoryResponseDTO;
 import ecommerce.backend.service.category.CategoryService;
@@ -53,9 +55,31 @@ public class CategoryController {
                 .body(response);
     }
 
+    @PatchMapping("/{categoryId}/status")
+    public ResponseEntity<APIResponse<CategoryResponseDTO>> updateCategoryStatusById(
+           @PathVariable Long categoryId,
+           @Valid @RequestBody CategoryStatusUpdatedRequestDTO status,
+            Authentication authentication
+    ){
+        String loggedInEmail = authentication.getName();
 
+        APIResponse<CategoryResponseDTO> response=categoryService.changeCategoryStatusById(categoryId,status,loggedInEmail);
+        return ResponseEntity.ok(response);
+    }
 
-    @DeleteMapping("/{categoryId}")
+    @PutMapping("{categoryId}/update")
+    public ResponseEntity<APIResponse<CategoryResponseDTO>> updateCategoryByCategoryId(
+            @PathVariable  Long categoryId,
+           @Valid @RequestBody CategoryUpdateRequest updateRequest,
+            Authentication authentication
+    )
+    {
+        String loggedInEmail = authentication.getName();
+        APIResponse<CategoryResponseDTO> response=categoryService.updateCategoryById(categoryId,updateRequest,loggedInEmail);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{categoryId}/delete")
     public ResponseEntity<APIResponse<String>> deleteCategory(
             Authentication authentication,
             @PathVariable Long categoryId
@@ -63,6 +87,10 @@ public class CategoryController {
     {
         String loggedInEmail = authentication.getName();
 
-        return ResponseEntity.ok(categoryService.deleteCategoryById(categoryId,loggedInEmail));
+        APIResponse<String> response =categoryService.deleteCategoryById(categoryId,loggedInEmail);
+
+
+
+        return ResponseEntity.ok(response);
     }
 }

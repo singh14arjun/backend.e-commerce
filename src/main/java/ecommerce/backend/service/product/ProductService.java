@@ -20,6 +20,7 @@ public interface ProductService {
     APIResponse<List<ProductResponseDTO>> getAllProductsByCategoryId(Long id);
     APIResponse<List<ProductResponseDTO>> getAllProductsByBrandId(Long id);
     APIResponse<List<ProductResponseDTO>> getAllProducts();
+    APIResponse<List<ProductResponseDTO>> getAllProductsBySellerId(String loggedInEmail );
 
     ProductResponseDTO updateProduct(
             Long id,

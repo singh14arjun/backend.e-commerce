@@ -1,8 +1,10 @@
 package ecommerce.backend.model.seller;
 
 
+import ecommerce.backend.constant.SellerStatus;
 import ecommerce.backend.model.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,7 +45,9 @@ public class Seller {
 
     private String panNumber;
 
-    private Boolean isActive;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private SellerStatus status;
 
     private LocalDateTime createdAt;
 

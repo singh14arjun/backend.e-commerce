@@ -54,6 +54,17 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("allProducts")
+    public ResponseEntity<APIResponse<List<ProductResponseDTO>>> getAllProductsLoggedInSeller(
+            Authentication authentication
+    ) {
+        String loggedInEmail = authentication.getName();
+
+        APIResponse<List<ProductResponseDTO>> response=productService.getAllProductsBySellerId(loggedInEmail);
+
+        return ResponseEntity.ok(response);
+
+    }
 
 
 

@@ -40,7 +40,7 @@ public class BrandRequestDTO {
     @NotNull(message = "Brand status is required")
     private BrandStatus status = BrandStatus.ACTIVE;
 
-    @NotNull(message = "Sub category is required")
-    @Positive(message = "Sub category ID must be greater than 0")
-    private Long subCategoryId;
+//    @NotNull(message = "Sub category is required")
+//    @Positive(message = "Sub category ID must be greater than 0")
+//    private Long subCategoryId;
 }

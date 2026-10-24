@@ -10,6 +10,8 @@ import ecommerce.backend.model.category.Category;
 import ecommerce.backend.model.category.SubCategory;
 import ecommerce.backend.model.user.User;
 import ecommerce.backend.payload.dtoRequest.category.SubCategoryRequestDTO;
+import ecommerce.backend.payload.dtoRequest.category.SubCategoryStatusUpdateRequestDTO;
+import ecommerce.backend.payload.dtoRequest.category.SubCategoryUpdateRequestDTO;
 import ecommerce.backend.payload.dtoResponse.APIResponse;
 import ecommerce.backend.payload.dtoResponse.category.SubCategoryResponseDTO;
 import ecommerce.backend.repository.UserRepository;
@@ -19,6 +21,7 @@ import ecommerce.backend.service.category.SubCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -153,9 +156,80 @@ public class SubCategoryServiceImpl implements SubCategoryService {
                 subCategories
         );
     }
+    @Override
+    public APIResponse<List<SubCategoryResponseDTO>> getAllActiveSubCategories() {
+
+        List<SubCategoryResponseDTO> subCategories=subCategoryRepository.findAllByStatus(SubCategoryStatus.ACTIVE)
+                .stream()
+                .map(Mapper::createSubCategoryResponseDTO)
+                .toList();
+
+        if(subCategories.isEmpty()){
+            return  new APIResponse<>(
+                    false,
+                    "No subcategories found",
+                    null
+            );
+        }
+        return new APIResponse<>(
+                true,
+                "All active subcategories",
+                subCategories
+        );
+    }
 
     @Override
-    public APIResponse<SubCategoryResponseDTO> updateSubCategory(Long subCategoryId, SubCategoryRequestDTO subCategoryRequestDTO, String loggedEmail) {
+    public APIResponse<SubCategoryResponseDTO> updateSubCategory(Long subCategoryId, SubCategoryUpdateRequestDTO subCategoryRequestDTO, String loggedEmail) {
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public APIResponse<SubCategoryResponseDTO> updateSubCategoryStatus(Long subCategoryId, SubCategoryStatusUpdateRequestDTO subCategoryStatusUpdateRequestDTO, String loggedEmail) {
+
+        SubCategory subCategory=subCategoryRepository.findById(subCategoryId).orElse(null);
+        if(subCategory==null){
+            return  new APIResponse<>(
+                    false,
+                    "Sub category not found : "+subCategoryId,
+                    null
+            );
+        }
+        User loggedUser= getLoggedInUser(loggedEmail);
+
+        checkAdmin(loggedUser);
+
+        if(subCategoryStatusUpdateRequestDTO == null || subCategoryStatusUpdateRequestDTO.getStatus()==null){
+            return  new APIResponse<>(
+                    false,
+                    "Subcategory status is required",
+                    null
+            );
+        }
+
+        if(subCategoryStatusUpdateRequestDTO.getStatus()==SubCategoryStatus.ACTIVE
+         && subCategory.getCategory().getStatus() != CategoryStatus.ACTIVE){
+            return  new APIResponse<>(
+                    false,
+                    "Cannot activate Subcategory status because its parent category is not active",
+                    null
+            );
+        }
+
+        subCategory.setStatus(subCategoryStatusUpdateRequestDTO.getStatus());
+        subCategoryRepository.save(subCategory);
+
+        return new APIResponse<>(
+                true,
+                "Sub Category status updated successfully",
+                Mapper.createSubCategoryResponseDTO(subCategory)
+        );
+    }
+
+
+
+    @Override
+    public APIResponse<String> deleteSubCategoryById(Long subCategoryId, String loggedEmail) {
         return null;
     }
 

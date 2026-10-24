@@ -1,5 +1,6 @@
 package ecommerce.backend.controller.category;
 import ecommerce.backend.payload.dtoRequest.category.SubCategoryRequestDTO;
+import ecommerce.backend.payload.dtoRequest.category.SubCategoryStatusUpdateRequestDTO;
 import ecommerce.backend.payload.dtoResponse.APIResponse;
 import ecommerce.backend.payload.dtoResponse.category.SubCategoryResponseDTO;
 import ecommerce.backend.service.category.SubCategoryService;
@@ -35,6 +36,18 @@ public class SubCategoryController {
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PatchMapping("/{subCategoryId}/updateStatus")
+    public ResponseEntity<APIResponse<SubCategoryResponseDTO>> updateSubCategoryStatus(
+            @PathVariable Long subCategoryId,
+            @RequestBody SubCategoryStatusUpdateRequestDTO requestDTO,
+            Authentication authentication
+            ){
+        String loggedInEmail=authentication.getName();
+
+        APIResponse<SubCategoryResponseDTO> response=subCategoryService.updateSubCategoryStatus(subCategoryId,requestDTO,loggedInEmail);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
 }
 
